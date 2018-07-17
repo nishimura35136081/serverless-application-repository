@@ -30,13 +30,13 @@ Parameters:
   # SES Info
   AdminEmail:
     Type: String
-    Default:
+    Default: test@test.com
     Description: AdminEmail for notifications
     AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
     ConstraintDescription: You should enter a valid email
   CcEmail:
     Type: String
-    Default:
+    Default: test@test.com
     Description: CcEmail for notifications
     AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
     ConstraintDescription: You should enter a valid email
@@ -97,6 +97,8 @@ Resources:
     Properties:
       Handler: indexget.get
       Runtime: nodejs6.10
+      Policies:
+        - DynamoDBCrudPolicy: {}
       CodeUri: appget.zip
       Environment:
         Variables:
@@ -113,6 +115,8 @@ Resources:
     Properties:
       Handler: indexput.put
       Runtime: nodejs6.10
+      Policies:
+        - DynamoDBCrudPolicy: {}
       CodeUri: appput.zip
       Environment:
         Variables:
@@ -129,6 +133,8 @@ Resources:
     Properties:
       Handler: indexdelete.delete
       Runtime: nodejs6.10
+      Policies:
+        - DynamoDBCrudPolicy: {}
       CodeUri: appdelete.zip
       Environment:
         Variables:
@@ -163,6 +169,9 @@ Resources:
       Handler: indexbatch.check
       Runtime: nodejs6.10
       Timeout: 15
+      Policies:
+        - DynamoDBCrudPolicy: {}
+        - SESCrudPolicy: {}
       CodeUri: appbatch.zip
       Environment:
         Variables:

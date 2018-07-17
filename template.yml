@@ -33,13 +33,13 @@ Parameters:
   AdminEmail:
     AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
     ConstraintDescription: You should enter a valid email
-    Default: null
+    Default: test@test.com
     Description: AdminEmail for notifications
     Type: String
   CcEmail:
     AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
     ConstraintDescription: You should enter a valid email
-    Default: null
+    Default: test@test.com
     Description: CcEmail for notifications
     Type: String
   IdentityName:
@@ -105,6 +105,8 @@ Resources:
             Path: /resource/{resourceId}
           Type: Api
       Handler: indexdelete.delete
+      Policies:
+      - DynamoDBCrudPolicy: {}
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   DynamoDBTable:
@@ -151,6 +153,9 @@ Resources:
               Ref: Schedule
           Type: Schedule
       Handler: indexbatch.check
+      Policies:
+      - DynamoDBCrudPolicy: {}
+      - SESCrudPolicy: {}
       Runtime: nodejs6.10
       Timeout: 15
     Type: AWS::Serverless::Function
@@ -168,6 +173,8 @@ Resources:
             Path: /resource/{resourceId}
           Type: Api
       Handler: indexget.get
+      Policies:
+      - DynamoDBCrudPolicy: {}
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   PutFunction:
@@ -184,6 +191,8 @@ Resources:
             Path: /resource/{resourceId}
           Type: Api
       Handler: indexput.put
+      Policies:
+      - DynamoDBCrudPolicy: {}
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   StaticBucket:
