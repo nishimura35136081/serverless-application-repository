@@ -54,7 +54,7 @@ Parameters:
     Default: "\u3010serverless application message1\u3011"
     Description: message1 for notifications
     Type: String
-  Notified_n_days_ago:
+  NotifiedNDaysAgo:
     Default: 1
     Description: notified n days ago for notifications
     Type: String
@@ -133,7 +133,7 @@ Resources:
           MESSAGE3:
             Ref: Message3
           NOTIFIED_N_DAYS_AGO:
-            Ref: Notified_n_days_ago
+            Ref: NotifiedNDaysAgo
           SUBJECT:
             Ref: Subject
           TABLE_NAME:

@@ -52,7 +52,7 @@ Parameters:
     Type: String
     Default: 【serverless application message3】
     Description: message3 for notifications
-  Notified_n_days_ago:
+  NotifiedNDaysAgo:
     Type: String
     Default: 1
     Description: notified n days ago for notifications
@@ -184,7 +184,7 @@ Resources:
           # After Message2, scheduled return date is shown.
           MESSAGE2: !Ref Message2
           MESSAGE3: !Ref Message3
-          NOTIFIED_N_DAYS_AGO: !Ref Notified_n_days_ago
+          NOTIFIED_N_DAYS_AGO: !Ref NotifiedNDaysAgo
       Events:
         Timer:
           Type: Schedule
