@@ -14,7 +14,7 @@ Parameters:
   # S3 Info
   StaticDomain:
     Type: String
-    Default: hogehoge.btc.com
+    Default: test.bucket.com
     Description: domain for static website hosting
 
   # DymanoDB Info
@@ -42,19 +42,19 @@ Parameters:
     ConstraintDescription: You should enter a valid email
   Subject:
     Type: String
-    Default: 【自動送信】【クラウド推進チーム】SAA試験対策本の返却について
+    Default: 【serverless application title】
     Description: subject for notifications
   Mwssage1:
     Type: String
-    Default: お疲れ様です。西村@クラウド推進チームです。
+    Default: 【serverless application message1】
     Description: message1 for notifications
   Message2:
     Type: String
-    Default: SAA試験対策本の返却日は以下の通りです。忘れずにご返却ください。
+    Default: 【serverless application message2】
     Description: message2 for notifications
   Message3:
     Type: String
-    Default: 以上、よろしくお願いいたします。
+    Default: 【serverless application message3】
     Description: message3 for notifications
   Notified_n_days_ago:
     Type: String
@@ -173,7 +173,8 @@ Resources:
       Runtime: nodejs6.10
       Timeout: 15
       Policies:
-        - DynamoDBCrudPolicy: {}
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableName
         - SESCrudPolicy: {}
       CodeUri: appbatch.zip
       Environment:
