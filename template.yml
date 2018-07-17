@@ -93,7 +93,7 @@ Parameters:
 Resources:
   DeleteFunction:
     Properties:
-      CodeUri: s3://lambda-package-btc/8bf6cf96e84deaf9e79d9d030ced6017
+      CodeUri: s3://lambda-package-btc/23de06f774a48884f2637aa4883e3097
       Environment:
         Variables:
           TABLE_NAME:
@@ -106,22 +106,7 @@ Resources:
           Type: Api
       Handler: indexdelete.delete
       Policies:
-      - Statement:
-        - Action:
-          - dynamodb:GetItem
-          - dynamodb:DeleteItem
-          - dynamodb:PutItem
-          - dynamodb:Scan
-          - dynamodb:Query
-          - dynamodb:UpdateItem
-          - dynamodb:BatchWriteItem
-          - dynamodb:BatchGetItem
-          Effect: Allow
-          Resource:
-            Fn::Sub:
-            - arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tableName}
-            - tableName:
-                Ref: TableName
+      - DynamoDBCrudPolicy
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   DynamoDBTable:
@@ -142,7 +127,7 @@ Resources:
     Type: AWS::DynamoDB::Table
   GetAllDataAndSESRelationFunction:
     Properties:
-      CodeUri: s3://lambda-package-btc/69c6c93bcbf3753725229deb01e52dcc
+      CodeUri: s3://lambda-package-btc/7d0dca53e0489bec2415749e652c00ac
       Environment:
         Variables:
           EMAIL_ADMIN:
@@ -169,38 +154,14 @@ Resources:
           Type: Schedule
       Handler: indexbatch.check
       Policies:
-      - Statement:
-        - Action:
-          - dynamodb:GetItem
-          - dynamodb:DeleteItem
-          - dynamodb:PutItem
-          - dynamodb:Scan
-          - dynamodb:Query
-          - dynamodb:UpdateItem
-          - dynamodb:BatchWriteItem
-          - dynamodb:BatchGetItem
-          Effect: Allow
-          Resource:
-            Fn::Sub:
-            - arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tableName}
-            - tableName:
-                Ref: TableName
-      - Action:
-        - ses:GetIdentityVerificationAttributes
-        - ses:SendEmail
-        - ses:VerifyEmailIdentity
-        Effect: Allow
-        Resource:
-          Fn::Sub:
-          - arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/${identityName}
-          - identityName:
-              Ref: IdentityName
+      - DynamoDBCrudPolicy
+      - SESCrudPolicy
       Runtime: nodejs6.10
       Timeout: 15
     Type: AWS::Serverless::Function
   GetFunction:
     Properties:
-      CodeUri: s3://lambda-package-btc/a701dcaf7aa1116c58101a1c03089d76
+      CodeUri: s3://lambda-package-btc/5a8112641b7f953ce77fcc1898da8d57
       Environment:
         Variables:
           TABLE_NAME:
@@ -213,27 +174,12 @@ Resources:
           Type: Api
       Handler: indexget.get
       Policies:
-      - Statement:
-        - Action:
-          - dynamodb:GetItem
-          - dynamodb:DeleteItem
-          - dynamodb:PutItem
-          - dynamodb:Scan
-          - dynamodb:Query
-          - dynamodb:UpdateItem
-          - dynamodb:BatchWriteItem
-          - dynamodb:BatchGetItem
-          Effect: Allow
-          Resource:
-            Fn::Sub:
-            - arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tableName}
-            - tableName:
-                Ref: TableName
+      - DynamoDBCrudPolicy
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   PutFunction:
     Properties:
-      CodeUri: s3://lambda-package-btc/8170e64071b15284a68948f6ed5d5f5f
+      CodeUri: s3://lambda-package-btc/5a97e4642947bb7b677553823bcd48cc
       Environment:
         Variables:
           TABLE_NAME:
@@ -246,22 +192,7 @@ Resources:
           Type: Api
       Handler: indexput.put
       Policies:
-      - Statement:
-        - Action:
-          - dynamodb:GetItem
-          - dynamodb:DeleteItem
-          - dynamodb:PutItem
-          - dynamodb:Scan
-          - dynamodb:Query
-          - dynamodb:UpdateItem
-          - dynamodb:BatchWriteItem
-          - dynamodb:BatchGetItem
-          Effect: Allow
-          Resource:
-            Fn::Sub:
-            - arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tableName}
-            - tableName:
-                Ref: TableName
+      - DynamoDBCrudPolicy
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   StaticBucket:
