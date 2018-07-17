@@ -23,7 +23,7 @@ Parameters:
     Type: String
     MinLength: 3
     MaxLength: 50
-    Default: yourTableName
+    Default: defaultTableName
     AllowedPattern: ^[A-Za-z]+$
     ConstraintDescription: Required parameter. Must be characters only. No numbers allowed.
 
@@ -98,7 +98,8 @@ Resources:
       Handler: indexget.get
       Runtime: nodejs6.10
       Policies:
-        - DynamoDBCrudPolicy: {}
+        - DynamoDBCrudPolicy: 
+            TableName: !Ref TableName
       CodeUri: appget.zip
       Environment:
         Variables:
@@ -116,7 +117,8 @@ Resources:
       Handler: indexput.put
       Runtime: nodejs6.10
       Policies:
-        - DynamoDBCrudPolicy: {}
+        - DynamoDBCrudPolicy: 
+            TableName: !Ref TableName
       CodeUri: appput.zip
       Environment:
         Variables:
@@ -134,7 +136,8 @@ Resources:
       Handler: indexdelete.delete
       Runtime: nodejs6.10
       Policies:
-        - DynamoDBCrudPolicy: {}
+        - DynamoDBCrudPolicy: 
+            TableName: !Ref TableName
       CodeUri: appdelete.zip
       Environment:
         Variables:

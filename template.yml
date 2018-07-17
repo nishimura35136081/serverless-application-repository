@@ -84,7 +84,7 @@ Parameters:
     AllowedPattern: ^[A-Za-z]+$
     ConstraintDescription: Required parameter. Must be characters only. No numbers
       allowed.
-    Default: yourTableName
+    Default: defaultTableName
     Description: (Required) The name of the new DynamoDB table you want to create
       and save to. Minimum 3 characters
     MaxLength: 50
@@ -106,7 +106,9 @@ Resources:
           Type: Api
       Handler: indexdelete.delete
       Policies:
-      - DynamoDBCrudPolicy: {}
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: TableName
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   DynamoDBTable:
@@ -174,7 +176,9 @@ Resources:
           Type: Api
       Handler: indexget.get
       Policies:
-      - DynamoDBCrudPolicy: {}
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: TableName
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   PutFunction:
@@ -192,7 +196,9 @@ Resources:
           Type: Api
       Handler: indexput.put
       Policies:
-      - DynamoDBCrudPolicy: {}
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: TableName
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   StaticBucket:
