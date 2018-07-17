@@ -5,12 +5,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: severless lending management Application
 
 Parameters:
-  # User Info
-  IdentityName:
-    Type: String
-    Default: firstname.lastname
-    Description: user name
-
   # S3 Info
   StaticDomain:
     Type: String
@@ -61,23 +55,6 @@ Parameters:
     Default: cron(0 1 ? * MON-FRI *)
     Description: schedule for notifications
 
-Metadata:
-  AWS::CloudFormation::Interface:
-    ParameterGroups:
-      - Label:
-          default: S3 Configuration
-        Parameters:
-          - StaticDomain
-      - Label:
-          default: DynamoDB Configuration
-        Parameters:
-          - TableName
-    ParameterLabels:
-      StaticDomain:
-        default: domain for static website hosting
-      TableName:
-        default: dynamodb name
-
 Resources:
   StaticBucket:
     Type: AWS::S3::Bucket
@@ -94,7 +71,7 @@ Resources:
       Handler: indexget.get
       Runtime: nodejs6.10
       Policies:
-        - DynamoDBCrudPolicy: 
+        - DynamoDBCrudPolicy:
             TableName: !Ref TableName
       CodeUri: appget.zip
       Environment:
@@ -113,7 +90,7 @@ Resources:
       Handler: indexput.put
       Runtime: nodejs6.10
       Policies:
-        - DynamoDBCrudPolicy: 
+        - DynamoDBCrudPolicy:
             TableName: !Ref TableName
       CodeUri: appput.zip
       Environment:
@@ -132,7 +109,7 @@ Resources:
       Handler: indexdelete.delete
       Runtime: nodejs6.10
       Policies:
-        - DynamoDBCrudPolicy: 
+        - DynamoDBCrudPolicy:
             TableName: !Ref TableName
       CodeUri: appdelete.zip
       Environment:
@@ -172,7 +149,7 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: !Ref TableName
         - SESCrudPolicy:
-            IdentityName: !Ref IdentityName
+            IdentityName: !Ref AdminEmail
       CodeUri: appbatch.zip
       Environment:
         Variables:

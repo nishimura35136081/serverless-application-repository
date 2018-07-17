@@ -1,21 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: severless lending management Application
-Metadata:
-  AWS::CloudFormation::Interface:
-    ParameterGroups:
-    - Label:
-        default: S3 Configuration
-      Parameters:
-      - StaticDomain
-    - Label:
-        default: DynamoDB Configuration
-      Parameters:
-      - TableName
-    ParameterLabels:
-      StaticDomain:
-        default: domain for static website hosting
-      TableName:
-        default: dynamodb name
 Outputs:
   DynamoDBTableArn:
     Description: The ARN of your DynamoDB Table
@@ -37,10 +21,6 @@ Parameters:
   CcEmail:
     Default: test@test.com
     Description: CcEmail for notifications
-    Type: String
-  IdentityName:
-    Default: firstname.lastname
-    Description: user name
     Type: String
   Message1:
     Default: "\u3010serverless application message1\u3011"
@@ -151,7 +131,7 @@ Resources:
             Ref: TableName
       - SESCrudPolicy:
           IdentityName:
-            Ref: IdentityName
+            Ref: AdminEmail
       Runtime: nodejs6.10
       Timeout: 15
     Type: AWS::Serverless::Function
