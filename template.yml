@@ -42,6 +42,10 @@ Parameters:
     Default: firstname.lastname
     Description: user name
     Type: String
+  Message1:
+    Default: "\u3010serverless application message1\u3011"
+    Description: message1 for notifications
+    Type: String
   Message2:
     Default: "\u3010serverless application message2\u3011"
     Description: message2 for notifications
@@ -49,10 +53,6 @@ Parameters:
   Message3:
     Default: "\u3010serverless application message3\u3011"
     Description: message3 for notifications
-    Type: String
-  Mwssage1:
-    Default: "\u3010serverless application message1\u3011"
-    Description: message1 for notifications
     Type: String
   NotifiedNDaysAgo:
     Default: 1

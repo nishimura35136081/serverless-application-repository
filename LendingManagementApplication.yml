@@ -40,7 +40,7 @@ Parameters:
     Type: String
     Default: 【serverless application title】
     Description: subject for notifications
-  Mwssage1:
+  Message1:
     Type: String
     Default: 【serverless application message1】
     Description: message1 for notifications
