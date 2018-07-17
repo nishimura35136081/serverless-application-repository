@@ -1,0 +1,202 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: severless lending management Application
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: S3 Configuration
+      Parameters:
+      - StaticDomain
+    - Label:
+        default: DynamoDB Configuration
+      Parameters:
+      - TableName
+    ParameterLabels:
+      StaticDomain:
+        default: domain for static website hosting
+      TableName:
+        default: dynamodb name
+Outputs:
+  DynamoDBTableArn:
+    Description: The ARN of your DynamoDB Table
+    Value:
+      Fn::GetAtt:
+      - DynamoDBTable
+      - Arn
+  StaticURL:
+    Value:
+      Fn::Join:
+      - ''
+      - - https://s3.amazonaws.com/
+        - Ref: StaticDomain
+Parameters:
+  AdminEmail:
+    AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
+    ConstraintDescription: You should enter a valid email
+    Default: null
+    Description: AdminEmail for notifications
+    Type: String
+  CcEmail:
+    AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
+    ConstraintDescription: You should enter a valid email
+    Default: null
+    Description: CcEmail for notifications
+    Type: String
+  Message2:
+    Default: "SAA\u8A66\u9A13\u5BFE\u7B56\u672C\u306E\u8FD4\u5374\u65E5\u306F\u4EE5\
+      \u4E0B\u306E\u901A\u308A\u3067\u3059\u3002\u5FD8\u308C\u305A\u306B\u3054\u8FD4\
+      \u5374\u304F\u3060\u3055\u3044\u3002"
+    Description: message2 for notifications
+    Type: String
+  Message3:
+    Default: "\u4EE5\u4E0A\u3001\u3088\u308D\u3057\u304F\u304A\u9858\u3044\u3044\u305F\
+      \u3057\u307E\u3059\u3002"
+    Description: message3 for notifications
+    Type: String
+  Mwssage1:
+    Default: "\u304A\u75B2\u308C\u69D8\u3067\u3059\u3002\u897F\u6751@\u30AF\u30E9\u30A6\
+      \u30C9\u63A8\u9032\u30C1\u30FC\u30E0\u3067\u3059\u3002"
+    Description: message1 for notifications
+    Type: String
+  Notified_n_days_ago:
+    Default: 1
+    Description: notified n days ago for notifications
+    Type: String
+  Schedule:
+    Default: cron(0 1 ? * MON-FRI *)
+    Description: schedule for notifications
+    Type: String
+  StaticDomain:
+    Default: hogehoge.btc.com
+    Description: domain for static website hosting
+    Type: String
+  Subject:
+    Default: "\u3010\u81EA\u52D5\u9001\u4FE1\u3011\u3010\u30AF\u30E9\u30A6\u30C9\u63A8\
+      \u9032\u30C1\u30FC\u30E0\u3011SAA\u8A66\u9A13\u5BFE\u7B56\u672C\u306E\u8FD4\u5374\
+      \u306B\u3064\u3044\u3066"
+    Description: subject for notifications
+    Type: String
+  TableName:
+    AllowedPattern: ^[A-Za-z]+$
+    ConstraintDescription: Required parameter. Must be characters only. No numbers
+      allowed.
+    Default: yourTableName
+    Description: (Required) The name of the new DynamoDB table you want to create
+      and save to. Minimum 3 characters
+    MaxLength: 50
+    MinLength: 3
+    Type: String
+Resources:
+  DeleteFunction:
+    Properties:
+      CodeUri: s3://lambda-package-btc/7f91bc790b1846457dd4477695618ec6
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: DynamoDBTable
+      Events:
+        DeleteResource:
+          Properties:
+            Method: delete
+            Path: /resource/delete/{resourceId}
+          Type: Api
+      Handler: indexdelete.delete
+      Policies:
+      - AmazonDynamoDBFullAccess
+      Runtime: nodejs6.10
+    Type: AWS::Serverless::Function
+  DynamoDBTable:
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+      TableName:
+        Ref: TableName
+    Type: AWS::DynamoDB::Table
+  GetAllDataAndSESRelationFunction:
+    Properties:
+      CodeUri: s3://lambda-package-btc/eb5bacce4dbb16d0c369ec4adda786b3
+      Environment:
+        Variables:
+          EMAIL_ADMIN:
+            Ref: AdminEmail
+          EMAIL_CC_ADRESS:
+            Ref: CcEmail
+          MESSAGE1:
+            Ref: Message1
+          MESSAGE2:
+            Ref: Message2
+          MESSAGE3:
+            Ref: Message3
+          NOTIFIED_N_DAYS_AGO:
+            Ref: Notified_n_days_ago
+          SUBJECT:
+            Ref: Subject
+          TABLE_NAME:
+            Ref: DynamoDBTable
+      Events:
+        Timer:
+          Properties:
+            Schedule:
+              Ref: Schedule
+          Type: Schedule
+      Handler: indexbatch.check
+      Policies:
+      - AmazonDynamoDBFullAccess
+      - AmazonSESFullAccess
+      Runtime: nodejs6.10
+      Timeout: 15
+    Type: AWS::Serverless::Function
+  GetFunction:
+    Properties:
+      CodeUri: s3://lambda-package-btc/3841200b52929f69dacc10c88bf9cbb6
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: DynamoDBTable
+      Events:
+        GetResource:
+          Properties:
+            Method: get
+            Path: /resource/get/{resourceId}
+          Type: Api
+      Handler: indexget.get
+      Policies:
+      - AmazonDynamoDBFullAccess
+      Runtime: nodejs6.10
+    Type: AWS::Serverless::Function
+  PutFunction:
+    Properties:
+      CodeUri: s3://lambda-package-btc/4a912fd9b6c0bd78b39a814c5975ac26
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: DynamoDBTable
+      Events:
+        PutResource:
+          Properties:
+            Method: put
+            Path: /resource/put/{resourceId}
+          Type: Api
+      Handler: indexput.put
+      Policies:
+      - AmazonDynamoDBFullAccess
+      Runtime: nodejs6.10
+    Type: AWS::Serverless::Function
+  StaticBucket:
+    Properties:
+      BucketName:
+        Ref: StaticDomain
+      WebsiteConfiguration:
+        ErrorDocument: error.html
+        IndexDocument: index.html
+    Type: AWS::S3::Bucket
+Transform: AWS::Serverless-2016-10-31

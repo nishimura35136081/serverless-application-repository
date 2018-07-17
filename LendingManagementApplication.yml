@@ -1,0 +1,200 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+
+# Definition of explanatory sentences to be displayed in Description column when creating stack
+Description: severless lending management Application
+
+Parameters:
+  # S3 Info
+  StaticDomain:
+    Type: String
+    Default: hogehoge.btc.com
+    Description: domain for static website hosting
+
+  # DymanoDB Info
+  TableName:
+    Description: (Required) The name of the new DynamoDB table you want to create and save to. Minimum 3 characters
+    Type: String
+    MinLength: 3
+    MaxLength: 50
+    Default: yourTableName
+    AllowedPattern: ^[A-Za-z]+$
+    ConstraintDescription: Required parameter. Must be characters only. No numbers allowed.
+    
+  # SES Info
+  AdminEmail:
+    Type: String
+    Default: 
+    Description: AdminEmail for notifications
+    AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
+    ConstraintDescription: You should enter a valid email
+  CcEmail:
+    Type: String
+    Default: 
+    Description: CcEmail for notifications
+    AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
+    ConstraintDescription: You should enter a valid email
+  Subject:
+    Type: String
+    Default: 【自動送信】【クラウド推進チーム】SAA試験対策本の返却について
+    Description: subject for notifications
+  Mwssage1:
+    Type: String
+    Default: お疲れ様です。西村@クラウド推進チームです。
+    Description: message1 for notifications
+  Message2:
+    Type: String
+    Default: SAA試験対策本の返却日は以下の通りです。忘れずにご返却ください。
+    Description: message2 for notifications
+  Message3:
+    Type: String
+    Default: 以上、よろしくお願いいたします。
+    Description: message3 for notifications
+  Notified_n_days_ago:
+    Type: String
+    Default: 1
+    Description: notified n days ago for notifications
+  Schedule:
+    Type: String
+    Default: cron(0 1 ? * MON-FRI *)
+    Description: schedule for notifications
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: S3 Configuration
+        Parameters:
+          - StaticDomain
+      - Label:
+          default: DynamoDB Configuration
+        Parameters:
+          - TableName
+    ParameterLabels:
+      StaticDomain:
+        default: domain for static website hosting
+      TableName:
+        default: dynamodb name
+
+Resources:
+  StaticBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        Ref: StaticDomain
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+
+  GetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: indexget.get
+      Runtime: nodejs6.10
+      Policies:
+        - AmazonDynamoDBFullAccess
+      CodeUri: appget.zip
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTable
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /resource/get/{resourceId}
+            Method: get
+
+  PutFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: indexput.put
+      Runtime: nodejs6.10
+      Policies:
+        - AmazonDynamoDBFullAccess
+      CodeUri: appput.zip
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTable
+      Events:
+        PutResource:
+          Type: Api
+          Properties:
+            Path: /resource/put/{resourceId}
+            Method: put
+
+  DeleteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: indexdelete.delete
+      Runtime: nodejs6.10
+      Policies:
+        - AmazonDynamoDBFullAccess
+      CodeUri: appdelete.zip
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTable
+      Events:
+        DeleteResource:
+          Type: Api
+          Properties:
+            Path: /resource/delete/{resourceId}
+            Method: delete
+
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      KeySchema:
+      - KeyType: HASH
+        AttributeName: id
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+      TableName:
+        Ref: TableName
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      ProvisionedThroughput:
+        WriteCapacityUnits: 1
+        ReadCapacityUnits: 1
+
+  GetAllDataAndSESRelationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: indexbatch.check
+      Runtime: nodejs6.10
+      Timeout: 15
+      Policies:
+      - AmazonDynamoDBFullAccess
+      - AmazonSESFullAccess
+      CodeUri: appbatch.zip
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTable
+          EMAIL_ADMIN: !Ref AdminEmail
+          EMAIL_CC_ADRESS: !Ref CcEmail
+          SUBJECT: !Ref Subject
+          MESSAGE1: !Ref Message1
+          # After Message2, scheduled return date is shown.
+          MESSAGE2: !Ref Message2
+          MESSAGE3: !Ref Message3
+          NOTIFIED_N_DAYS_AGO: !Ref Notified_n_days_ago
+      Events:
+        Timer:
+          Type: Schedule
+          Properties:
+            Schedule: !Ref Schedule
+
+# Output of information allocated after stack creation
+Outputs:
+  StaticURL:
+    Value:
+      Fn::Join:
+        - ''
+        - - https://s3.amazonaws.com/
+          - Ref: StaticDomain
+  DynamoDBTableArn:
+    Description: The ARN of your DynamoDB Table
+    Value:
+      Fn::GetAtt:
+      - DynamoDBTable
+      - Arn
