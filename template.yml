@@ -31,14 +31,14 @@ Outputs:
         - Ref: StaticDomain
 Parameters:
   AdminEmail:
-    AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
-    ConstraintDescription: You should enter a valid email
+    AllowedPattern: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    ConstraintDescription: You should enter a valid email address for From
     Default: test@test.com
     Description: AdminEmail for notifications
     Type: String
   CcEmail:
-    AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
-    ConstraintDescription: You should enter a valid email
+    AllowedPattern: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    ConstraintDescription: You should enter a valid email address for Cc
     Default: test@test.com
     Description: CcEmail for notifications
     Type: String

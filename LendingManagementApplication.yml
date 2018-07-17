@@ -32,14 +32,14 @@ Parameters:
     Type: String
     Default: test@test.com
     Description: AdminEmail for notifications
-    AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
-    ConstraintDescription: You should enter a valid email
+    AllowedPattern: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    ConstraintDescription: You should enter a valid email address for From
   CcEmail:
     Type: String
     Default: test@test.com
     Description: CcEmail for notifications
-    AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
-    ConstraintDescription: You should enter a valid email
+    AllowedPattern: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    ConstraintDescription: You should enter a valid email address for Cc
   Subject:
     Type: String
     Default: 【serverless application title】
