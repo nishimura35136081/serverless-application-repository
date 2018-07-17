@@ -5,6 +5,12 @@ Transform: AWS::Serverless-2016-10-31
 Description: severless lending management Application
 
 Parameters:
+  # User Info
+  IdentityName:
+    Type: String
+    Default: firstname.lastname
+    Description: user name
+
   # S3 Info
   StaticDomain:
     Type: String
@@ -92,7 +98,22 @@ Resources:
       Handler: indexget.get
       Runtime: nodejs6.10
       Policies:
-        - DynamoDBCrudPolicy
+        - Statement: 
+          - Effect: Allow
+            Action: 
+              - "dynamodb:GetItem"
+              - "dynamodb:DeleteItem"
+              - "dynamodb:PutItem"
+              - "dynamodb:Scan"
+              - "dynamodb:Query"
+              - "dynamodb:UpdateItem"
+              - "dynamodb:BatchWriteItem"
+              - "dynamodb:BatchGetItem"
+            Resource: 
+              "Fn::Sub": 
+                - "arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tableName}"
+                - tableName: 
+                    Ref: TableName
       CodeUri: appget.zip
       Environment:
         Variables:
@@ -101,7 +122,7 @@ Resources:
         GetResource:
           Type: Api
           Properties:
-            Path: /resource/get/{resourceId}
+            Path: /resource/{resourceId}
             Method: get
 
   PutFunction:
@@ -110,7 +131,22 @@ Resources:
       Handler: indexput.put
       Runtime: nodejs6.10
       Policies:
-        - DynamoDBCrudPolicy
+        - Statement: 
+          - Effect: Allow
+            Action: 
+              - "dynamodb:GetItem"
+              - "dynamodb:DeleteItem"
+              - "dynamodb:PutItem"
+              - "dynamodb:Scan"
+              - "dynamodb:Query"
+              - "dynamodb:UpdateItem"
+              - "dynamodb:BatchWriteItem"
+              - "dynamodb:BatchGetItem"
+            Resource: 
+              "Fn::Sub": 
+                - "arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tableName}"
+                - tableName: 
+                    Ref: TableName
       CodeUri: appput.zip
       Environment:
         Variables:
@@ -119,7 +155,7 @@ Resources:
         PutResource:
           Type: Api
           Properties:
-            Path: /resource/put/{resourceId}
+            Path: /resource/{resourceId}
             Method: put
 
   DeleteFunction:
@@ -128,7 +164,22 @@ Resources:
       Handler: indexdelete.delete
       Runtime: nodejs6.10
       Policies:
-        - DynamoDBCrudPolicy
+        - Statement: 
+          - Effect: Allow
+            Action: 
+              - "dynamodb:GetItem"
+              - "dynamodb:DeleteItem"
+              - "dynamodb:PutItem"
+              - "dynamodb:Scan"
+              - "dynamodb:Query"
+              - "dynamodb:UpdateItem"
+              - "dynamodb:BatchWriteItem"
+              - "dynamodb:BatchGetItem"
+            Resource: 
+              "Fn::Sub": 
+                - "arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tableName}"
+                - tableName: 
+                    Ref: TableName
       CodeUri: appdelete.zip
       Environment:
         Variables:
@@ -137,7 +188,7 @@ Resources:
         DeleteResource:
           Type: Api
           Properties:
-            Path: /resource/delete/{resourceId}
+            Path: /resource/{resourceId}
             Method: delete
 
   DynamoDBTable:
@@ -164,8 +215,32 @@ Resources:
       Runtime: nodejs6.10
       Timeout: 15
       Policies:
-      - DynamoDBCrudPolicy
-      - SESCrudPolicy
+        - Statement: 
+          - Effect: Allow
+            Action: 
+              - "dynamodb:GetItem"
+              - "dynamodb:DeleteItem"
+              - "dynamodb:PutItem"
+              - "dynamodb:Scan"
+              - "dynamodb:Query"
+              - "dynamodb:UpdateItem"
+              - "dynamodb:BatchWriteItem"
+              - "dynamodb:BatchGetItem"
+            Resource: 
+              "Fn::Sub": 
+                - "arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tableName}"
+                - tableName: 
+                    Ref: TableName
+        - Effect: Allow
+          Action: 
+            - "ses:GetIdentityVerificationAttributes"
+            - "ses:SendEmail"
+            - "ses:VerifyEmailIdentity"
+          Resource: 
+            "Fn::Sub": 
+              - "arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/${identityName}"
+              - identityName: 
+                  Ref: IdentityName
       CodeUri: appbatch.zip
       Environment:
         Variables:
