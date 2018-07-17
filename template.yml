@@ -106,7 +106,7 @@ Resources:
           Type: Api
       Handler: indexdelete.delete
       Policies:
-      - DynamoDBCrudPolicy
+      - DynamoDBCrudPolicy: {}
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   DynamoDBTable:
@@ -154,8 +154,8 @@ Resources:
           Type: Schedule
       Handler: indexbatch.check
       Policies:
-      - DynamoDBCrudPolicy
-      - SESCrudPolicy
+      - DynamoDBCrudPolicy: {}
+      - SESCrudPolicy: {}
       Runtime: nodejs6.10
       Timeout: 15
     Type: AWS::Serverless::Function
@@ -174,7 +174,7 @@ Resources:
           Type: Api
       Handler: indexget.get
       Policies:
-      - DynamoDBCrudPolicy
+      - DynamoDBCrudPolicy: {}
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   PutFunction:
@@ -192,7 +192,7 @@ Resources:
           Type: Api
       Handler: indexput.put
       Policies:
-      - DynamoDBCrudPolicy
+      - DynamoDBCrudPolicy: {}
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   StaticBucket:

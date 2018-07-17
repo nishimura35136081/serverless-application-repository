@@ -98,7 +98,7 @@ Resources:
       Handler: indexget.get
       Runtime: nodejs6.10
       Policies:
-        - DynamoDBCrudPolicy
+        - DynamoDBCrudPolicy: {}
       CodeUri: appget.zip
       Environment:
         Variables:
@@ -116,7 +116,7 @@ Resources:
       Handler: indexput.put
       Runtime: nodejs6.10
       Policies:
-        - DynamoDBCrudPolicy
+        - DynamoDBCrudPolicy: {}
       CodeUri: appput.zip
       Environment:
         Variables:
@@ -134,7 +134,7 @@ Resources:
       Handler: indexdelete.delete
       Runtime: nodejs6.10
       Policies:
-        - DynamoDBCrudPolicy
+        - DynamoDBCrudPolicy: {}
       CodeUri: appdelete.zip
       Environment:
         Variables:
@@ -170,8 +170,8 @@ Resources:
       Runtime: nodejs6.10
       Timeout: 15
       Policies:
-        - DynamoDBCrudPolicy
-        - SESCrudPolicy
+        - DynamoDBCrudPolicy: {}
+        - SESCrudPolicy: {}
       CodeUri: appbatch.zip
       Environment:
         Variables:
