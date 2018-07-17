@@ -89,7 +89,7 @@ Parameters:
 Resources:
   DeleteFunction:
     Properties:
-      CodeUri: s3://lambda-package-btc/7f91bc790b1846457dd4477695618ec6
+      CodeUri: s3://lambda-package-btc/23de06f774a48884f2637aa4883e3097
       Environment:
         Variables:
           TABLE_NAME:
@@ -102,7 +102,7 @@ Resources:
           Type: Api
       Handler: indexdelete.delete
       Policies:
-      - AmazonDynamoDBFullAccess
+      - DynamoDBCrudPolicy
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   DynamoDBTable:
@@ -123,7 +123,7 @@ Resources:
     Type: AWS::DynamoDB::Table
   GetAllDataAndSESRelationFunction:
     Properties:
-      CodeUri: s3://lambda-package-btc/eb5bacce4dbb16d0c369ec4adda786b3
+      CodeUri: s3://lambda-package-btc/7d0dca53e0489bec2415749e652c00ac
       Environment:
         Variables:
           EMAIL_ADMIN:
@@ -150,14 +150,14 @@ Resources:
           Type: Schedule
       Handler: indexbatch.check
       Policies:
-      - AmazonDynamoDBFullAccess
-      - AmazonSESFullAccess
+      - DynamoDBCrudPolicy
+      - SESCrudPolicy
       Runtime: nodejs6.10
       Timeout: 15
     Type: AWS::Serverless::Function
   GetFunction:
     Properties:
-      CodeUri: s3://lambda-package-btc/3841200b52929f69dacc10c88bf9cbb6
+      CodeUri: s3://lambda-package-btc/5a8112641b7f953ce77fcc1898da8d57
       Environment:
         Variables:
           TABLE_NAME:
@@ -170,12 +170,12 @@ Resources:
           Type: Api
       Handler: indexget.get
       Policies:
-      - AmazonDynamoDBFullAccess
+      - DynamoDBCrudPolicy
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   PutFunction:
     Properties:
-      CodeUri: s3://lambda-package-btc/4a912fd9b6c0bd78b39a814c5975ac26
+      CodeUri: s3://lambda-package-btc/5a97e4642947bb7b677553823bcd48cc
       Environment:
         Variables:
           TABLE_NAME:
@@ -188,7 +188,7 @@ Resources:
           Type: Api
       Handler: indexput.put
       Policies:
-      - AmazonDynamoDBFullAccess
+      - DynamoDBCrudPolicy
       Runtime: nodejs6.10
     Type: AWS::Serverless::Function
   StaticBucket:

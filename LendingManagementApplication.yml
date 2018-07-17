@@ -20,17 +20,17 @@ Parameters:
     Default: yourTableName
     AllowedPattern: ^[A-Za-z]+$
     ConstraintDescription: Required parameter. Must be characters only. No numbers allowed.
-    
+
   # SES Info
   AdminEmail:
     Type: String
-    Default: 
+    Default:
     Description: AdminEmail for notifications
     AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
     ConstraintDescription: You should enter a valid email
   CcEmail:
     Type: String
-    Default: 
+    Default:
     Description: CcEmail for notifications
     AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
     ConstraintDescription: You should enter a valid email
@@ -92,7 +92,7 @@ Resources:
       Handler: indexget.get
       Runtime: nodejs6.10
       Policies:
-        - AmazonDynamoDBFullAccess
+        - DynamoDBCrudPolicy
       CodeUri: appget.zip
       Environment:
         Variables:
@@ -110,7 +110,7 @@ Resources:
       Handler: indexput.put
       Runtime: nodejs6.10
       Policies:
-        - AmazonDynamoDBFullAccess
+        - DynamoDBCrudPolicy
       CodeUri: appput.zip
       Environment:
         Variables:
@@ -128,7 +128,7 @@ Resources:
       Handler: indexdelete.delete
       Runtime: nodejs6.10
       Policies:
-        - AmazonDynamoDBFullAccess
+        - DynamoDBCrudPolicy
       CodeUri: appdelete.zip
       Environment:
         Variables:
@@ -164,8 +164,8 @@ Resources:
       Runtime: nodejs6.10
       Timeout: 15
       Policies:
-      - AmazonDynamoDBFullAccess
-      - AmazonSESFullAccess
+      - DynamoDBCrudPolicy
+      - SESCrudPolicy
       CodeUri: appbatch.zip
       Environment:
         Variables:
