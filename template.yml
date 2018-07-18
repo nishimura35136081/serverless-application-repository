@@ -63,7 +63,7 @@ Parameters:
 Resources:
   DeleteFunction:
     Properties:
-      CodeUri: s3://lambda-package-btc/23de06f774a48884f2637aa4883e3097
+      CodeUri: s3://lambda-package-btc/2be5a7b15ca8e7f93984f1d213d0ef09
       Environment:
         Variables:
           TABLE_NAME:
@@ -137,7 +137,7 @@ Resources:
     Type: AWS::Serverless::Function
   GetFunction:
     Properties:
-      CodeUri: s3://lambda-package-btc/5a8112641b7f953ce77fcc1898da8d57
+      CodeUri: s3://lambda-package-btc/4dec764c85deffe7675b2e229f4ddbc6
       Environment:
         Variables:
           TABLE_NAME:
@@ -157,7 +157,7 @@ Resources:
     Type: AWS::Serverless::Function
   PutFunction:
     Properties:
-      CodeUri: s3://lambda-package-btc/5a97e4642947bb7b677553823bcd48cc
+      CodeUri: s3://lambda-package-btc/b0282783e51ced41b74515716470bc01
       Environment:
         Variables:
           TABLE_NAME:

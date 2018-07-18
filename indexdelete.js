@@ -11,7 +11,8 @@ const createResponse = (statusCode, body) => {
         'statusCode': statusCode,
         'headers': {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin' : '*' // Required for CORS support to work
+            'Access-Control-Allow-Origin' : '*', // Required for CORS support to work
+            'Access-Control-Allow-Methods': 'PUT'
         },
         'body': JSON.stringify(body)
     };
