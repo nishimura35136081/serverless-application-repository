@@ -8,12 +8,12 @@ const tableName = process.env.TABLE_NAME;
 
 const createResponse = (statusCode, body) => {
     return {
-        'statusCode': statusCode,
-        'headers': {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin' : '*' // Required for CORS support to work
+        "statusCode": statusCode,
+        "headers": {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin" : "*" // Required for CORS support to work
         },
-        'body': JSON.stringify(body)
+        "body": JSON.stringify(body)
     };
 };
 
