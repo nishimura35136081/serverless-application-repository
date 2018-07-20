@@ -155,7 +155,7 @@ Resources:
         Variables:
           TABLE_NAME: !Ref DynamoDBTable
           EMAIL_ADMIN: !Ref AdminEmail
-          EMAIL_CC_ADRESS: !Ref CcEmail
+          EMAIL_CC_ADDRESS: !Ref CcEmail
           SUBJECT: !Ref Subject
           MESSAGE1: !Ref Message1
           # After Message2, scheduled return date is shown.

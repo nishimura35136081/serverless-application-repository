@@ -99,12 +99,12 @@ Resources:
     Type: AWS::DynamoDB::Table
   GetAllDataAndSESRelationFunction:
     Properties:
-      CodeUri: s3://lambda-package-btc/7d0dca53e0489bec2415749e652c00ac
+      CodeUri: s3://lambda-package-btc/548deecd1a3923e4fd8402a7b53c5793
       Environment:
         Variables:
           EMAIL_ADMIN:
             Ref: AdminEmail
-          EMAIL_CC_ADRESS:
+          EMAIL_CC_ADDRESS:
             Ref: CcEmail
           MESSAGE1:
             Ref: Message1

@@ -18,17 +18,17 @@ const message1 = process.env.MESSAGE1;
 const message2 = process.env.MESSAGE2;
 const message3 = process.env.MESSAGE3;
 const emailAdmin = process.env.EMAIL_ADMIN;
-const emailCCAdress = process.env.EMAIL_CC_ADRESS;
+const emailCCAddress = process.env.EMAIL_CC_ADDRESS;
 const notifiedNDaysAgo = process.env.NOTIFIED_N_DAYS_AGO;
 
 const createResponse = (statusCode, body) => {
     return {
-        'statusCode': statusCode,
-        'headers': {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin' : '*' // Required for CORS support to work
+        "statusCode": statusCode,
+        "headers": {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin" : "*" // Required for CORS support to work
         },
-        'body': JSON.stringify(body)
+        "body": JSON.stringify(body)
     };
 };
 
@@ -56,7 +56,7 @@ exports.check = (event, context, callback) => {
             data.Items.forEach(function(record, index){
                 console.log('new Date(record.scheduled_return_date).getTime():' + new Date(record.scheduled_return_date).getTime());
                 if(new Date(record.scheduled_return_date).getTime() <= (date.getTime() + 1000 * 60 * 60 * 24 * Number(notifiedNDaysAgo))) {
-                    if(!emailCCAdress) {
+                    if(!emailCCAddress) {
                         var eParams = {
                             Destination: {
                                 ToAddresses: [record.email]
@@ -79,7 +79,7 @@ exports.check = (event, context, callback) => {
                         eParams = {
                             Destination: {
                                 ToAddresses: [record.email],
-                                CcAddresses: [emailCCAdress]
+                                CcAddresses: [emailCCAddress]
                             },
                             Message: {
                                 Body: {
